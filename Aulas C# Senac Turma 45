@@ -1,4 +1,94 @@
-################################################################################################################################
-# Crie uma função que receba por parâmetro dois vetores de quatro elementos inteiros e que calcule e retorne o vetor diferença #
-################################################################################################################################
+################################################################
+# Código de um formulário de transferência e saque de um banco #
+################################################################
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace formCaraTeste
+{
+    public partial class formTeste : Form
+    {
+        private double saldoBanco = 1000;
+        private double valorCara1 = 0;
+        private double valorCara2 = 250;
+
+        public formTeste()
+        {
+            InitializeComponent();
+            AtualizarLabels();
+        }
+
+        private void btRecebe_Click(object sender, EventArgs e)
+        {
+            if (double.TryParse(txtValor.Text, out double valorRecebido))
+            {
+                if (saldoBanco - valorRecebido >= 0)
+                {
+                    if (MessageBox.Show($"Tem certeza que deseja receber essa quantia: {valorRecebido.ToString("C")}?", "Confirmação", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        saldoBanco -= valorRecebido;
+                        valorCara1 += valorRecebido;
+                        AtualizarLabels();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("O saldo do banco é insuficiente para realizar a operação.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Valor inválido.");
+            }
+        }
+
+        private void btEnvia_Click(object sender, EventArgs e)
+        {
+            if (double.TryParse(txtValor.Text, out double valorEnviado))
+            {
+                if (MessageBox.Show($"Tem certeza que deseja enviar essa quantia: {valorEnviado.ToString("C")}?", "Confirmação", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (valorCara2 >= valorEnviado)
+                    {
+                        if (saldoBanco + valorEnviado >= valorEnviado)
+                        {
+                            saldoBanco += valorEnviado; // Adiciona o saldo do Cara2 ao saldo do banco
+                            valorCara2 -= valorEnviado; // Subtrai o valor enviado do saldo do Cara2
+                            AtualizarLabels();
+                        }
+                        else
+                        {
+                            MessageBox.Show("O saldo do banco é insuficiente para realizar a operação.");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("O saldo do Cara2 é insuficiente para realizar a operação.");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Valor inválido.");
+            }
+        }
+
+
+        private void AtualizarLabels()
+        {
+            lbCara1.Text = "Cara1: " + valorCara1.ToString("C");
+            lbCara2.Text = "Cara2: " + valorCara2.ToString("C");
+            lbBanco.Text = "Saldo do Banco: " + saldoBanco.ToString("C");
+        }
+    }
+}
+
 
